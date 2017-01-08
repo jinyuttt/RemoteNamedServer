@@ -1,0 +1,142 @@
+package DataProcess;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import com.Tools.MsgPackTool;
+
+import DataModel.QueueModel;
+import DataModel.StorageModel;
+import DataModel.TreansferModel;
+import DataQueue.DataBus;
+import DataQueue.IQueueCall;
+import DataQueue.QueueID;
+import DataStore.PersistentStorage;
+
+/**
+ * 缓存数据
+ * @author jinyu
+ *
+ */
+public class DataCenter {
+	static DataBus busdata=null;
+public	static IQueueCall call;
+	static PersistentStorage persist=null;
+	static Map<String,QueueModel> cacheData=null;
+	
+/**
+ * 添加数据
+ * 如果数据过多，则丢入BerkeleyDB
+ * @param model
+ */
+public static void AddData(TreansferModel model)
+{
+	if(busdata==null)
+	{
+		busdata=new DataBus(call);
+	}
+	QueueModel curModel=new QueueModel();
+	curModel.id=System.currentTimeMillis();
+	curModel.data=model.data;
+    
+	//可用小于10M则丢进数据库
+    if(Runtime.getRuntime().totalMemory()+10*1024*1024<Runtime.getRuntime().maxMemory())
+    {
+    	   busdata.AddData(curModel);
+    }
+    else
+    {
+    	AddCahe(curModel);
+    }
+    
+}
+
+/**
+ * 对数据库数据进行处理
+ * 
+ * @param qmodel
+ */
+private static void AddCahe(QueueModel qmodel)
+{
+	if(persist==null)
+	{
+		persist=new PersistentStorage ();
+		StartThreadDB();
+		
+		
+	}
+	if(cacheData==null)
+	{
+		cacheData=new HashMap<String,QueueModel>();
+	}
+	String key=String.valueOf( System.currentTimeMillis())+ QueueID.queueid++;
+	  
+	persist.Save("", qmodel);
+}
+
+private static void StartThreadDB() {
+	Thread dataCahe=new Thread(new Runnable()
+			{
+
+				@Override
+				public void run() {
+				  MsgPackTool tool=new MsgPackTool();
+				  StringBuilder error=new StringBuilder();
+				while(true)
+				{
+			  try
+			  {
+				 List<byte[]> keys=new LinkedList<byte[]>();
+				 Map<byte[],byte[]> data=	persist.SelectList(100);
+				 for (byte[] key : data.keySet()) {  
+				  byte[]  value = data.get(key);  //
+				  StorageModel<QueueModel> model1=  tool.Deserialize(value, StorageModel.class, error);
+				  busdata.AddData(model1.data);
+				  keys.add(key);
+				 }
+			
+				 Thread.sleep(500);
+				
+				//
+					
+				persist.DeleteList(keys);
+				if(keys.size()>=100)
+				{
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						
+						e.printStackTrace();
+					}
+				}
+				else
+				{
+					try {
+						Thread.sleep(5000);
+					} catch (InterruptedException e) {
+					
+						e.printStackTrace();
+					}
+				}
+			  }
+					catch(Exception ex)
+					{
+						try {
+							Thread.sleep(2000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				  
+				}
+				}
+			}
+	);
+	dataCahe.setDaemon(true);
+	dataCahe.setName("DBCache");
+	dataCahe.start();
+}
+}

@@ -1,0 +1,13 @@
+package ProxyExchange;
+
+import DDS_Transfer.IRecMsg;
+
+public class DataRecvice implements IRecMsg {
+
+	@Override
+	public void RecData(String address, byte[] data) {
+		
+
+	}
+
+}

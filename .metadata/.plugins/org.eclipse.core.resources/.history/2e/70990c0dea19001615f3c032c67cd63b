@@ -1,0 +1,39 @@
+package TestPro;
+
+
+import java.util.Date;
+
+import com.Tools.MsgPackTool;
+
+import DataModel.TreansferModel;
+import DataProcess.DataCenter;
+import nameServerClient.ProxyClient;
+import nameServerInterface.IPoxyObj;
+
+public class TestMainClient {
+
+	public static void main(String[] args) {
+	  while(true)
+	  {
+		StringBuilder error=new StringBuilder();
+	    IPoxyObj proxy=	ProxyClient.CastObj("Test", error);
+	    if(proxy!=null)
+	    {
+	    	MsgPackTool tool=new MsgPackTool();
+			TreansferModel model=new TreansferModel();
+			model.key=String.valueOf(System.currentTimeMillis());
+			model.data=new Date().toString();
+		    byte[]bytes= tool.Serialize(model, error);
+			
+	        proxy.CallData(bytes);
+	    }
+	    try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	  }
+	}
+
+}

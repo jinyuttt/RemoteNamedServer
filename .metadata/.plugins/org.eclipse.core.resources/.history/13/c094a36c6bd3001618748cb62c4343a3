@@ -1,0 +1,68 @@
+package ProxyExchange;
+
+import org.zeromq.ZMQ;
+
+import DDS_Transfer.IDDS_Protocol;
+
+
+
+/**
+ * 发起服务请求
+ * 暂时采用jeromq
+ * @author jinyu
+ *
+ */
+public class BridgeClient {
+public String IP="";
+public int port=0;
+public String type_name;
+String url="";
+ZMQ.Context context;
+ZMQ.Socket socket;
+IDDS_Protocol curObj=null;
+/**
+ * 连接服务端
+ * @return
+ */
+public boolean Connect()
+{
+	try
+	{
+//     context=ZMQ.context(1);
+//     socket=context.socket(ZMQ.REQ);
+//	 url="tcp://"+IP+":"+port;
+//	 socket.connect(url);
+		 Object obj=TransferProtocolObj.getInstance().CreateObject(type_name);
+		  if(obj!=null)
+		  {
+			    curObj = (IDDS_Protocol)obj;
+			   // curObj.SendData(IP+":"+port, data);
+		  }
+	         return true;
+	}
+	catch(Exception ex)
+	{
+    	return false;
+	}
+}
+public byte[]  RecData(byte[]para)
+{
+	if(socket!=null)
+	{
+		socket.send(para);
+	    return	socket.recv();
+	}
+	else
+	{
+		return null;
+	}
+	
+}
+public void SendData(byte[]data)
+{
+	if(socket!=null)
+	{
+	  	socket.send(data,ZMQ.NOBLOCK);
+	}
+}
+}

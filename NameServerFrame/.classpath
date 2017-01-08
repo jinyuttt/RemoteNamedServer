@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="FunClass"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/NameServerContainer"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/NameServerInterface"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Com.Tools"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ProxyCommunication"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
