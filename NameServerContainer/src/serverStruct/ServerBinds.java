@@ -34,4 +34,11 @@ public String communicationType;
  * 服务唯一值，用于客户端标已经接受过的信息
  */
 public String sid;
+
+/**
+ * 确定是否是主服务
+ */
+public String master="0";
+
+public String slave="0";
 }
