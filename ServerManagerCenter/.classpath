@@ -8,5 +8,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/NameServerClient"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/NameServerInterface"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Com.Tools"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ProxyCommunication"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
