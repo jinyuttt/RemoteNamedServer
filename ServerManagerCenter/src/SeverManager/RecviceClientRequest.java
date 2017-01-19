@@ -29,16 +29,16 @@ import DDS_Transfer.IRecMsg;
 */
 public class RecviceClientRequest implements IRecMsg {
 	IDDS_Protocol  protocol=null;
-	/**  
-	* 接收数据   
-	* @see DDS_Transfer.IRecMsg#RecData(java.lang.String, byte[])    
-	*/
-
+	
+	
+/**
+ *  接收处理处理
+ */
 	@Override
 	public void RecData(String address, byte[] data) {
 	
 		ProceRequest  proce=new ProceRequest();
-	byte[] param=	proce.ask(address, data);
+	byte[] param=	proce.RespondClient(address, data);
 	if(param!=null)
 	{
 		if(protocol!=null)
@@ -50,11 +50,9 @@ public class RecviceClientRequest implements IRecMsg {
 	}
 
 	  
-	/**  
-	* 返回接收的通讯实例   
-	* @see DDS_Transfer.IRecMsg#SaveInstance(java.lang.Object)    
-	*/  
-	
+	/**
+	 * 保存通讯实例
+	 */
 	@Override
 	public void SaveInstance(Object call) {
 		protocol=(IDDS_Protocol)call;

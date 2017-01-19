@@ -37,7 +37,18 @@ import serverStruct.ServerBinds;
 *     
 */
 public class ProceRequest {
-public byte[]   ask(String address,byte[]data)
+	
+	/**
+	 * 
+	* @Name: RespondClient 
+	* @Description: 接收客户端数据，处理客户端请求 
+	* @param address 数据来源IP
+	* @param data  数据
+	
+	* @return byte[]   返回给客户端的数据
+	* @throws
+	 */
+public byte[]   RespondClient (String address,byte[]data)
 {
 	byte[] param=null;
 	RequestModel model=AnalysisParam.GetParam(data);
@@ -56,6 +67,15 @@ public byte[]   ask(String address,byte[]data)
 	}
 	return param;
 }
+
+/**
+ * 
+* @Name: ServerFun 
+* @Description: 获取代理传递数据 
+* @param data  参数说明 
+* void    返回类型 
+* @throws
+ */
 public void ServerFun(byte[]data)
 {
 	StringBuilder error=new StringBuilder();
@@ -65,6 +85,16 @@ public void ServerFun(byte[]data)
         proxy.SetData(data);
     }
 }
+
+/**
+ * 
+* @Name: ClientFun 
+* @Description:  获取服务信息，转出地址
+* @param name  传来的参数
+* @return  参数说明 
+* @return byte[]    服务信息
+* @throws
+ */
 public byte[] ClientFun(byte[] name)
 {
 	String serverName=new String(name);
